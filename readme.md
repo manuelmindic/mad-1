@@ -9,8 +9,26 @@
 ## Questions
 ### Describe how Kotlin handles null safety. What are nullable types and non-null types in Kotlin? (0,5 points)
 
-<span style="color:blue">Kotlin is null safe, means that you can´t declare null typically. But there is a way you can, and that´s with the ? after the Datatype, for this example it would be String?</span>
+<span style="color:blue">Kotlin is null safe, which is useful in case of preventing NullPointerExceptions, means that you can´t declare null typically. But there is a way you can, and that´s with the ? after the Datatype, for this example it would be String?</span>
 > Note: you can also use code snippets to illustrate your answer. 
+
+```kotlin 
+// example code snippet for using null
+val a: String? = null // null type
+```
+
+<span>For the cases below we can use "!!" to force the .toLowerCase() (errors can occur), the other options we have is with the "?" where compiler checks if a is null, in the case of it being null, the .toLowerCase() is being ignored. If it´s not null the .toLowerCase() is being executed. What we could also do is check if a is null with an if.</span>
+```kotlin 
+// example code snippet
+val a: String? = null // non-null type
+a.toLowerCase() // would not work
+a!!.toLowerCase() // should use this usualy, only in cases we are 100% sure we need it
+a?.toLowerCase() // typical approach
+
+if(a != null){
+    a.toLowerCase()
+}
+```
 
 ```kotlin 
 // example code snippet
@@ -19,7 +37,21 @@ val a: String = "value" // non-null type
 
 ### What are lambda expressions and higher order functions in Kotlin? Why would you store a function inside a variable? (0,5 points)
 
-<span style="color:blue">They are like objects that can be saved in variables. It´s better for overview and you write less code for more funcitonality</span>
+<span style="color:blue">They are like objects that can be saved in variables. It´s better for overview and you write less code for more funcitonality. Higher Order Functions can use other functions as parameters, which is useful when we have separated logic in two functions but need them in another function</span>
+
+```kotlin 
+val printMessages: (String) -> Unit = {println("User: $it")}
+
+val printMessagesForAdmin: (String) -> Unit = {println("Admin: $it")}
+
+fun printCustomMessage(message: String, printMessages: (String) -> Unit) {
+    printMessages(message)
+}
+
+printCustomMessage("Hello I´m user anna", printMessages)
+printCustomMessage("Hello I´m user manu", printMessagesForAdmin)
+
+```
 
 ### Provide a solution for the following number guessing game inside `App.kt`. (3 points)
 
