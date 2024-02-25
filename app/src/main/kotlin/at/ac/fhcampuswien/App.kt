@@ -6,6 +6,24 @@ package at.ac.fhcampuswien
 class App {
     // Game logic for a number guessing game
     fun playNumberGame(digitsToGuess: Int = 4) {
+        var done: Boolean = false
+        val guessNumber = generateRandomNonRepeatingNumber(digitsToGuess)
+        var rounds: Int = 0
+
+        // println(guessNumber) testing reasons
+        println("The digit to guess has the size of $digitsToGuess digits")
+
+        while (!done){
+            var inputOfUser = readlnOrNull()!!.toInt()
+            var solution = checkUserInputAgainstGeneratedNumber(inputOfUser,guessNumber)
+            println(solution)
+            if(solution.m == digitsToGuess && solution.n == digitsToGuess){
+                done = true
+            }
+            rounds++
+        }
+
+        println("You needed $rounds try´s")
         //TODO: build a menu which calls the functions and works with the return values
     }
 
@@ -24,8 +42,22 @@ class App {
      * @throws IllegalArgumentException if the length is more than 9 or less than 1.
      */
     val generateRandomNonRepeatingNumber: (Int) -> Int = { length ->
+        if (length > 9 || length < 1){
+            throw IllegalArgumentException("Number is not valid")
+        }
+        var done: Boolean = false
+        var numberList = mutableListOf<Int>()
+
+        while (!done){
+            numberList.add((1..9).random())
+            if (numberList.toSet().size == length){
+                numberList = numberList.toSet().toMutableList()
+                done = true
+            }
+        }
+
         //TODO implement the function
-        0   // return value is a placeholder
+        numberList.joinToString("").toInt()   // return value is a placeholder
     }
 
     /**
@@ -45,12 +77,40 @@ class App {
      * @throws IllegalArgumentException if the inputs do not have the same number of digits.
      */
     val checkUserInputAgainstGeneratedNumber: (Int, Int) -> CompareResult = { input, generatedNumber ->
+        val inputList = input.toString().map { it.toString().toInt() }
+        val generatedNumberList = generatedNumber.toString().map { it.toString().toInt() }
+
+        if (inputList.size != generatedNumberList.size || generatedNumberList.toSet().size != generatedNumberList.size){
+            throw IllegalArgumentException("")
+        }
+
+        var correctNumbers = 0
+
+        for (i in inputList.toSet()){
+            if (generatedNumberList.contains(i))
+            {
+                correctNumbers++
+            }
+        }
+
+        var correctPositions = 0
+
+        inputList.forEachIndexed { index, value ->
+            if (inputList[index] == value && generatedNumberList[index] == value){
+                correctPositions++
+            }
+        }
+
         //TODO implement the function
-        CompareResult(0, 0)   // return value is a placeholder
+        CompareResult(correctNumbers, correctPositions)   // return value is a placeholder
     }
 }
 
 fun main() {
-    println("Hello World!")
+    var gameClass = App()
+    gameClass.playNumberGame()
+    println("-------------------")
+    gameClass.playNumberGame(8) // HARD MODE ;)
+    println("-------------------")
     // TODO: call the App.playNumberGame function with and without default arguments
 }
